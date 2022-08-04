@@ -14,21 +14,22 @@ class LocationSeeder extends Seeder
      */
     public function run()
     {
-        $csvFile = fopen(base_path("database/locations.csv"), "r");
+        $csvFile = fopen(base_path("database/worldcities.csv"), "r");
 
-        $firstline = null;
+        $firstline = true;
         while (($data = fgetcsv($csvFile, 2000, ",")) !== False) {
-            if (!$firstline && strlen($data[2]) > 0) {
+            if (!$firstline) {
                 Location::create([
-                    "name" => $data[3],
-                    "latitude" => $data[1],
-                    "longitude"  => $data[2]
+                    "name" => $data[0],
+                    "latitude" => $data[2],
+                    "longitude"  => $data[3]
                 ]);
             }
-
             $firstline = false;
         }
 
         fclose($csvFile);
+
+        $this->command->info(Location::count() . ' locations added!');
     }
 }
