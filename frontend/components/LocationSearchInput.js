@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FlatList, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useDispatch } from "react-redux";
 import { setOrigin, setDestination } from "../store/navSlice";
-import { debounce } from "lodash";
+import { throttle } from "lodash";
 import useApi from "../hooks/useApi";
 import locationApi from "../api/locationApi";
 import tw from "tailwind-react-native-classnames";
@@ -13,7 +13,7 @@ const LocationSearchInput = () => {
   const [location, setLocation] = useState("");
   const [locations, setLocations] = useState([]);
 
-  const fetchData = debounce(async () => {
+  const fetchData = throttle(async () => {
     const result = await api.request(location);
     setLocations(result.data);
   }, 500);
@@ -25,7 +25,7 @@ const LocationSearchInput = () => {
 
   const handleSelectLocation = (item) => {
     setLocation(item.name);
-    setLocations(null);
+    setLocations([]);
 
     dispatch(
       setOrigin({
@@ -43,8 +43,8 @@ const LocationSearchInput = () => {
   return (
     <View style={tw`p-2`}>
       <TextInput value={location} onChangeText={(v) => handleSearch(v)} placeholder="Where from?" />
-      {locations && (
-        <View style={tw`absolute w-full z-10 bg-white top-10 shadow-lg rounded-lg`}>
+      {locations?.length > 0 && (
+        <View style={tw`absolute w-full flex-1 z-10 bg-white top-10 shadow-lg rounded-lg`}>
           <FlatList
             data={locations}
             keyExtractor={(item) => item.id}
