@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { FlatList, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { useDispatch } from "react-redux";
-import { setOrigin, setDestination } from "../store/navSlice";
 import { throttle } from "lodash";
 import useApi from "../hooks/useApi";
 import locationApi from "../api/locationApi";
-import tw from "tailwind-react-native-classnames";
+import tw from "twrnc";
 
-const LocationSearchInput = () => {
-  const dispatch = useDispatch();
+const LocationSearchInput = ({ handleSelectLocation, inputStyle = null }) => {
   const api = useApi(locationApi.search);
   const [location, setLocation] = useState("");
   const [locations, setLocations] = useState([]);
@@ -23,40 +20,39 @@ const LocationSearchInput = () => {
     fetchData();
   };
 
-  const handleSelectLocation = (item) => {
+  const handleSelected = (item) => {
     setLocation(item.name);
     setLocations([]);
 
-    dispatch(
-      setOrigin({
-        location: {
-          lat: item.latitude,
-          lng: item.longitude,
-        },
-        name: item.name,
-      })
-    );
-
-    dispatch(setDestination(null));
+    handleSelectLocation({
+      location: {
+        lat: item.latitude,
+        lng: item.longitude,
+      },
+      name: item.name,
+    });
   };
 
   return (
-    <View style={tw`p-2`}>
-      <TextInput value={location} onChangeText={(v) => handleSearch(v)} placeholder="Where from?" />
+    <View>
+      <TextInput
+        value={location}
+        onChangeText={(v) => handleSearch(v)}
+        placeholder="Where from?"
+        style={[tw`p-2`, inputStyle]}
+      />
       {locations?.length > 0 && (
-        <View style={tw`absolute w-full flex-1 z-10 bg-white top-10 shadow-lg rounded-lg`}>
-          <FlatList
-            data={locations}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handleSelectLocation(item)}>
-                <View style={tw`p-4 flex-1`}>
-                  <Text>{item.name}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
+        <FlatList
+          data={locations}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handleSelected(item)}>
+              <View style={tw`p-4 flex-1 bg-white`}>
+                <Text>{item.name}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
       )}
     </View>
   );

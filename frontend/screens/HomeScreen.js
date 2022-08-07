@@ -1,13 +1,19 @@
-import tw from "tailwind-react-native-classnames";
-
 import { Image, StyleSheet, View } from "react-native";
-import React from "react";
-
+import { useDispatch } from "react-redux";
+import { setDestination, setOrigin } from "../store/navSlice";
+import tw from "tailwind-react-native-classnames";
 import Screen from "../components/Screen";
 import NavOptions from "../components/NavOptions";
 import LocationSearchInput from "../components/LocationSearchInput";
 
 const HomeScreen = () => {
+  const dispatch = useDispatch();
+
+  const selectLocation = (item) => {
+    dispatch(setOrigin(item));
+    dispatch(setDestination(null));
+  };
+
   return (
     <Screen style={tw`bg-white h-full`}>
       <View style={tw`p-5`}>
@@ -15,7 +21,7 @@ const HomeScreen = () => {
           style={styles.iconStyle}
           source={{ uri: "https://1000logos.net/wp-content/uploads/2021/04/Uber-logo.png" }}
         />
-        <LocationSearchInput />
+        <LocationSearchInput handleSelectLocation={selectLocation} />
         <NavOptions />
       </View>
     </Screen>
