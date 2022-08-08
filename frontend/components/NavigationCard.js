@@ -6,6 +6,7 @@ import tw from "twrnc";
 import { useDispatch } from "react-redux";
 import { setDestination } from "../store/navSlice";
 import { useNavigation } from "@react-navigation/native";
+import NavFavorite from "./NavFavorite";
 
 const NavigationCard = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const NavigationCard = () => {
           navigation.navigate("RideOptionsCard");
         }}
       />
+      <NavFavorite />
     </SafeAreaView>
   );
 };

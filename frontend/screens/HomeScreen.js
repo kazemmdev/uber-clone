@@ -5,6 +5,7 @@ import tw from "tailwind-react-native-classnames";
 import Screen from "../components/Screen";
 import NavOptions from "../components/NavOptions";
 import LocationSearchInput from "../components/LocationSearchInput";
+import NavFavorite from "../components/NavFavorite";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const HomeScreen = () => {
         />
         <LocationSearchInput handleSelectLocation={selectLocation} />
         <NavOptions />
+        <NavFavorite />
       </View>
     </Screen>
   );
